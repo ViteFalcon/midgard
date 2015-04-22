@@ -7,11 +7,9 @@
 
     <context:annotation-config/>
 
-    <!--bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-        <property name="environment">
-            <bean class="org.springframework.core.env.StandardEnvironment"/>
-        </property>
-    </bean>
-
-    <context:property-placeholder location=""/-->
+    <bean id="commandLineArgsFactory" class="org.midgard.ragnarok.app.CommandLineArgsFactory" depends-on="cliOptions"/>
+    <bean id="commandLine"
+          class="org.apache.commons.cli.CommandLine"
+          factory-bean="commandLineArgsFactory"
+          factory-method="parseCommandLine"/>
 </beans>
