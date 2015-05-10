@@ -1,6 +1,8 @@
 package org.midgard.ragnarok.main;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.midgard.ragnarok.app.CliArgs;
@@ -41,8 +43,11 @@ public class Server {
             .put(ServerType.MAP, MAP_SERVER_CONFIG_LOCATIONS)
             .build();
 
+    @Getter
     private final CommandLine commandLine;
+    @Getter
     private final String serverName;
+    @Getter
     private final int portNumber;
 
     @Autowired
@@ -87,7 +92,8 @@ public class Server {
         context.registerShutdownHook();
     }
 
-    private static ServerType getServerType(String[] args) throws ParseException {
+    @VisibleForTesting
+    protected static ServerType getServerType(String[] args) throws ParseException {
         CliArgs cliArgs = new CliArgs(args);
         ServerCliOptions options = new ServerCliOptions();
         CommandLine cli = new CommandLineArgsFactory(options, cliArgs).parseCommandLine();
@@ -98,7 +104,8 @@ public class Server {
         throw new ParseException("Failed to find server-type from CLI arguments provided!");
     }
 
-    private static Optional<ServerType> retrieveServerType(CommandLine commandLine) {
-        return Optional.ofNullable(ServerType.valueOf(commandLine.getOptionValue("s")));
+    @VisibleForTesting
+    protected static Optional<ServerType> retrieveServerType(CommandLine commandLine) {
+        return ServerType.optionalValueOf(commandLine.getOptionValue("s"));
     }
 }
