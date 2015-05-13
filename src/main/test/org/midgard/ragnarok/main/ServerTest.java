@@ -25,7 +25,7 @@ public class ServerTest {
 
     @Mock
     private CommandLine commandLine;
-    private Server server;
+    private ServerMain server;
 
     @Before
     public void setUp() {
@@ -33,7 +33,7 @@ public class ServerTest {
 
         doReturn(SERVER_TYPE_ARG).when(commandLine).getOptionValue(SERVER_TYPE_OPT);
 
-        server = spy(new Server(commandLine, SERVER_NAME, PORT_NUMBER));
+        server = spy(new ServerMain(commandLine, SERVER_NAME, PORT_NUMBER));
     }
 
     @Test
@@ -54,19 +54,19 @@ public class ServerTest {
     @Test
     public void getServerType_WhenValid() throws Exception {
         String[] args = {"-s", "LOGIN"};
-        ServerType serverType = Server.getServerType(args);
+        ServerType serverType = ServerMain.getServerType(args);
         assertThat(serverType, is(ServerType.LOGIN));
     }
 
     @Test(expected = ParseException.class)
     public void getServerType_WhenInvalid() throws Exception {
         String[] args = {"-s", "mumbo-jumbo"};
-        Server.getServerType(args);
+        ServerMain.getServerType(args);
     }
 
     @Test
     public void retrieveServerType_WhenValid() {
-        Optional<ServerType> serverType = Server.retrieveServerType(commandLine);
+        Optional<ServerType> serverType = ServerMain.retrieveServerType(commandLine);
 
         assertThat(serverType, is(notNullValue()));
         assertThat(serverType.isPresent(), is(true));
@@ -76,7 +76,7 @@ public class ServerTest {
     @Test
     public void retrieveServerType_WhenInvalid() {
         doReturn("mumbo-jumbo").when(commandLine).getOptionValue(SERVER_TYPE_OPT);
-        Optional<ServerType> serverType = Server.retrieveServerType(commandLine);
+        Optional<ServerType> serverType = ServerMain.retrieveServerType(commandLine);
 
         assertThat(serverType, is(notNullValue()));
         assertThat(serverType.isPresent(), is(false));

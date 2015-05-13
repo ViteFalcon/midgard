@@ -12,4 +12,5 @@
           class="org.apache.commons.cli.CommandLine"
           factory-bean="commandLineArgsFactory"
           factory-method="parseCommandLine"/>
+
 </beans>

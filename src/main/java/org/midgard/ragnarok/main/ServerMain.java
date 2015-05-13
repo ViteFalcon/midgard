@@ -7,9 +7,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.midgard.ragnarok.app.CliArgs;
 import org.midgard.ragnarok.app.CommandLineArgsFactory;
+import org.midgard.ragnarok.app.Server;
 import org.midgard.ragnarok.data.ServerType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -26,7 +26,7 @@ import java.util.Optional;
  * The starting point of the server.
  */
 @Service
-public class Server {
+public class ServerMain {
     private static final String[] LOGIN_SERVER_CONFIG_LOCATIONS = new String[]{
             "spring/login-server.xml"
     };
@@ -44,34 +44,16 @@ public class Server {
             .build();
 
     @Getter
-    private final CommandLine commandLine;
-    @Getter
-    private final String serverName;
-    @Getter
-    private final int portNumber;
+    private final Server server;
 
     @Autowired
-    public Server(
-            CommandLine commandLine,
-            @Value("${server.name}") String serverName,
-            @Value("${server.port}") int portNumber) {
-        this.commandLine = commandLine;
-        this.serverName = serverName;
-        this.portNumber = portNumber;
+    public ServerMain(final Server server) {
+        this.server = server;
     }
 
     @PostConstruct
     public void start() throws ParseException {
-        Optional<ServerType> type = getServerType();
-        System.out.println(
-                String.format("Started %s's %s server on port %d!",
-                        serverName,
-                        type.isPresent() ? type.get().name() : null,
-                        portNumber));
-    }
-
-    private Optional<ServerType> getServerType() {
-        return retrieveServerType(commandLine);
+        server.start();
     }
 
     public static void main(String[] args) throws Exception {

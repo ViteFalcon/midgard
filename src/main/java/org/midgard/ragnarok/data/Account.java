@@ -7,7 +7,8 @@ import org.joda.time.DateTime;
 @Data
 @Builder
 public class Account {
-    private final long id;
+    private final String _id;
+    private final String _rev;
     private final String userid;
     private final AccountGender gender;
     private final String email;
