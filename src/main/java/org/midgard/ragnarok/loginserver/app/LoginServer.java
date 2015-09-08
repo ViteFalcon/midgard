@@ -33,4 +33,12 @@ public class LoginServer implements Server {
                         ServerType.LOGIN.name(),
                         portNumber));
     }
+
+    public String getName() {
+        return serverName;
+    }
+
+    public int getPortNumber() {
+        return portNumber;
+    }
 }

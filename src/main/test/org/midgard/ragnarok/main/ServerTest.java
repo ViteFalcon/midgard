@@ -7,10 +7,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import lombok.val;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
+import org.midgard.ragnarok.app.Server;
 import org.midgard.ragnarok.data.ServerType;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -25,30 +27,25 @@ public class ServerTest {
 
     @Mock
     private CommandLine commandLine;
-    private ServerMain server;
+    @Mock
+    private Server server;
+    private ServerMain main;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         doReturn(SERVER_TYPE_ARG).when(commandLine).getOptionValue(SERVER_TYPE_OPT);
+        doReturn(PORT_NUMBER).when(server).getPortNumber();
+        doReturn(SERVER_NAME).when(server).getName();
 
-        server = spy(new ServerMain(commandLine, SERVER_NAME, PORT_NUMBER));
+        main = spy(new ServerMain(server));
     }
 
     @Test
-    public void verifyCommandLine() {
-        assertThat(server.getCommandLine(), is(commandLine));
-    }
-
-    @Test
-    public void verifyServerName() {
-        assertThat(server.getServerName(), is(SERVER_NAME));
-    }
-
-    @Test
-    public void verifyPortNumber() {
-        assertThat(server.getPortNumber(), is(PORT_NUMBER));
+    public void getServerType() throws ParseException {
+        val serverType = ServerMain.getServerType(new String[]{"-s", "LOGIN"});
+        assertThat(serverType, is(ServerType.LOGIN));
     }
 
     @Test
